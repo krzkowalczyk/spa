@@ -14,3 +14,5 @@ docker build -t $registry_url:$registry_port/$project_name:$project_version .
 docker push $registry_url:$registry_port/$project_name:$project_version
 cd ~/
 rm -r $work_dir
+
+git remote set-url origin https://kojalowicz:Rhcp!987@github.com/kojalowicz/spa.git
