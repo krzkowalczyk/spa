@@ -3,7 +3,7 @@
 . /home/vagrant/env.conf
 
 cd /home/vagrant
-git clone --branch create_deplyment https://github.com/kojalowicz/spa.git
+git clone $git_clone_commend
 cd $work_dir/$source_code_location
 npm install
 npm run build
