@@ -21,14 +21,10 @@ function container_test () {
   docker stop $project_name || true && docker rm $project_name || true
 }
 
-if [[ ${FUNCNAME[0]} == "main" ]]; then
-  echo "sleep 10"
-  sleep 10
-  if [[ $what_to_test == "build" ]]; then
-    build_test
-  elif [[ $what_to_test == "container" ]]; then
-    container_test
-  else
-    echo "Wrong parameter choice for test"
-  fi
+if [[ $what_to_test == "build" ]]; then
+  build_test
+elif [[ $what_to_test == "container" ]]; then
+  container_test
+else
+  echo "Wrong parameter choice for test"
 fi
