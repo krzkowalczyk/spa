@@ -13,4 +13,4 @@ docker build -t $registry_url:$registry_port/$project_name:$project_version .
 . $work_dir/scripts/tests.sh container
 docker push $registry_url:$registry_port/$project_name:$project_version
 cd ~/
-rm -r $work_dir/$project_name
+rm -r $work_dir

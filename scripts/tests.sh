@@ -4,13 +4,13 @@ what_to_test=$1
 
 . /home/vagrant/env.conf
 
-build_test () {
+function build_test () {
   set -o pipefail
   cd $work_dir/$source_code_location
   ng e2e
 }
 
-container_test () {
+function container_test () {
   docker run -it --name $project_name -d -p $docker_port_host:$docker_port_guest $registry_url:$registry_port/$project_name:$project_version
   if curl -I "https://localhost:8080" 2>&1 | grep -w "200\|301" ; then
     echo "docker is up"
@@ -21,12 +21,12 @@ container_test () {
   docker stop $project_name || true && docker rm $project_name || true
 }
 
-main() {
-    if [[ $what_to_test == "build" ]]; then
-      build_test
-    elif [[ $what_to_test == "container" ]]; then
-      container_test
-    else
-      echo "Wrong parameter choice for test"
-    fi
-}
+if [[ ${FUNCNAME[0]} == "main" ]]; then
+  if [[ $what_to_test == "build" ]]; then
+    build_test
+  elif [[ $what_to_test == "container" ]]; then
+    container_test
+  else
+    echo "Wrong parameter choice for test"
+  fi
+fi
