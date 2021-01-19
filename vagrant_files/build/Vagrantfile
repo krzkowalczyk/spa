@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "mynewbox"
+  config.vm.provision :docker
+  config.vm.network "private_network", ip: "192.168.10.11"
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.synced_folder "../../logs", "/home/vagrant/logs", create: true
+  config.vm.provision "file", source: "../../configuration/nginx.conf", destination: "/home/vagrant/nginx.conf"
+  config.vm.provision "file", source: "../../configuration/env.conf", destination: "/home/vagrant/env.conf"
+  config.vm.provision "file", source: "../../scripts/tests.sh", destination: "/home/vagrant/tests.sh"
+  config.vm.provision "file", source: "../../Dockerfile", destination: "/home/vagrant/Dockerfile"
+  config.vm.provision :shell, path: "../../scripts/registry.sh"
+  config.vm.provision :shell, path: "../../scripts/build.sh"
+  config.vm.provision :shell, path: "../../scripts/just_do_it.sh", run: "always"
+end
+
+# ssh -i ./vagrant_private_key vagrant@192.168.10.11 "cd /home/vagrant/spa/app/ && sudo ng e2e"
+
+# ssh -i ./vagrant_private_key vagrant@192.168.10.11 "cd /home/vagrant/spa/app/ && sudo npm install -g @angular/cli"
