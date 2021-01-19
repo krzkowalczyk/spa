@@ -1,13 +1,32 @@
-#!/bin/bash -e
+#!/bin/bash -ex
+
+what_to_test=$1
 
 . /home/vagrant/env.conf
 
-#set -o pipefail
-cd $work_dir/$project_name/$source_code_location
-npm install -g @angular/cli |& tee $work_dir/logs/$project_name-angular-cli.log
-set -o pipefail
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub|sudo apt-key add -
-echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
-apt update -y
-apt install -y google-chrome-stable
-ng e2e |& tee $work_dir/logs/$project_name-test.log
+build_test () {
+  set -o pipefail
+  cd $work_dir/$source_code_location
+  ng e2e
+}
+
+container_test () {
+  docker run -it --name $project_name -d -p $docker_port_host:$docker_port_guest $registry_url:$registry_port/$project_name:$project_version
+  if curl -I "https://localhost:8080" 2>&1 | grep -w "200\|301" ; then
+    echo "docker is up"
+  else
+    echo "docker fail"
+    exit 1
+  fi
+  docker stop $project_name || true && docker rm $project_name || true
+}
+
+main() {
+    if [[ $what_to_test == "build" ]]; then
+      build_test
+    elif [[ $what_to_test == "container" ]]; then
+      container_test
+    else
+      echo "Wrong parameter choice for test"
+    fi
+}
