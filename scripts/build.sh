@@ -4,7 +4,7 @@
 
 cd /home/vagrant
 git clone --branch create_deplyment https://github.com/kojalowicz/spa.git
-cd .$work_dir/$source_code_location
+cd $work_dir/$source_code_location
 npm install
 npm run build
 . $work_dir/scripts/tests.sh build
