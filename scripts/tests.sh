@@ -22,6 +22,8 @@ function container_test () {
 }
 
 if [[ ${FUNCNAME[0]} == "main" ]]; then
+  echo "sleep 10"
+  sleep 10
   if [[ $what_to_test == "build" ]]; then
     build_test
   elif [[ $what_to_test == "container" ]]; then
